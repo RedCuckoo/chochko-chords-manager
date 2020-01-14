@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>Resources/cross.png</file>
+    <file>Resources/new_file.png</file>
+    <file>Resources/new_folder.png</file>
+  </qresource>
+</RCC>
