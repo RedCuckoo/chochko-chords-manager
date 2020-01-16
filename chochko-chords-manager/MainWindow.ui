@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>553</width>
-    <height>443</height>
+    <width>663</width>
+    <height>469</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,46 +16,50 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <layout class="QHBoxLayout" name="horizontalLayout">
+     <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="QTreeView" name="treeView">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>15</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="sizeAdjustPolicy">
-         <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
-        </property>
-        <property name="editTriggers">
-         <set>QAbstractItemView::NoEditTriggers</set>
-        </property>
-        <property name="selectionMode">
-         <enum>QAbstractItemView::MultiSelection</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QWebEngineView" name="webEngineView">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="url">
-         <url>
-          <string>about:blank</string>
-         </url>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QTreeView" name="treeView">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>15</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="sizeAdjustPolicy">
+           <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="selectionMode">
+           <enum>QAbstractItemView::SingleSelection</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QWebEngineView" name="webEngineView">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="url">
+           <url>
+            <string>https://mychords.net/</string>
+           </url>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </item>
@@ -66,7 +70,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>553</width>
+     <width>663</width>
      <height>21</height>
     </rect>
    </property>
@@ -78,11 +82,13 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionNew_Song"/>
+   <addaction name="actionHome_page"/>
+   <addaction name="separator"/>
    <addaction name="actionNew_Playlist"/>
    <addaction name="separator"/>
    <addaction name="actionDelete_selection"/>
    <addaction name="separator"/>
+   <addaction name="actionNew_Song"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionNew_Song">
@@ -129,6 +135,18 @@
    </property>
    <property name="shortcut">
     <string>Del</string>
+   </property>
+  </action>
+  <action name="actionHome_page">
+   <property name="icon">
+    <iconset resource="resource_file.qrc">
+     <normaloff>:/icons/Resources/homepage.png</normaloff>:/icons/Resources/homepage.png</iconset>
+   </property>
+   <property name="text">
+    <string>Home page</string>
+   </property>
+   <property name="toolTip">
+    <string>Go to the home page</string>
    </property>
   </action>
  </widget>
