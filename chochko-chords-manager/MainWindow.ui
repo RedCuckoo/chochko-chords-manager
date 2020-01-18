@@ -82,12 +82,11 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionGo_back"/>
    <addaction name="actionHome_page"/>
    <addaction name="separator"/>
    <addaction name="actionNew_Playlist"/>
-   <addaction name="separator"/>
    <addaction name="actionDelete_selection"/>
-   <addaction name="separator"/>
    <addaction name="actionNew_Song"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
@@ -147,6 +146,18 @@
    </property>
    <property name="toolTip">
     <string>Go to the home page</string>
+   </property>
+  </action>
+  <action name="actionGo_back">
+   <property name="icon">
+    <iconset resource="resource_file.qrc">
+     <normaloff>:/icons/Resources/back.png</normaloff>:/icons/Resources/back.png</iconset>
+   </property>
+   <property name="text">
+    <string>Go back</string>
+   </property>
+   <property name="toolTip">
+    <string>Go to the previous page</string>
    </property>
   </action>
  </widget>

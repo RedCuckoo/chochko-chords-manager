@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="icons">
+    <file>Resources/back.png</file>
     <file>Resources/cross.png</file>
     <file>Resources/new_file.png</file>
     <file>Resources/homepage.png</file>

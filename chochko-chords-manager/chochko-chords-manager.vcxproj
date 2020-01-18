@@ -90,6 +90,7 @@
   <ItemGroup>
     <ClCompile Include="AddPlaylistDialog.cpp" />
     <ClCompile Include="GreetingMessageBox.cpp" />
+    <ClCompile Include="HTMLParser.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
   </ItemGroup>
@@ -109,6 +110,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="AddPlaylistDialog.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="HTMLParser.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

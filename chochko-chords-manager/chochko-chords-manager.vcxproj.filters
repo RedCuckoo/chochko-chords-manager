@@ -11,6 +11,9 @@
     <ClCompile Include="AddPlaylistDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="HTMLParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Resource Files">
@@ -42,6 +45,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="AddPlaylistDialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="HTMLParser.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
