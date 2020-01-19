@@ -13,6 +13,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent){
 	if (!QDir("Playlists").exists()) {
 		QDir().mkdir("Playlists");
 	}
+	
+	if (!QDir("i").exists()) {
+		QDir().mkdir("i");
+		QDir().mkdir("i/img");
+		QDir().mkdir("i/img/akkords");
+	}
+
 
 	QFileSystemModel* playlistsModel = new QFileSystemModel;
 	//qDebug() << QDir::currentPath();
@@ -39,6 +46,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent){
 	label->setText("");
 
 	ui.actionNew_Song->setDisabled(true);
+
 
 
 	validatedSongUrl = QRegExp("^(https\\:\\/\\/(www\\.)?mychords\\.net\\/)([\\da-z-_\\.]+\\/)*([\\da-z-_\\.]+\\.html)$");
