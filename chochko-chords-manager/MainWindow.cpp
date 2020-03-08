@@ -35,21 +35,26 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent){
 	ui.treeView->setHeaderHidden(true);
 	ui.treeView->setRootIndex(playlistsModel->index("Playlists"));
 
-	(topStatusBar = new QStatusBar(this))->addWidget(progressBar = new QProgressBar(this));
 	QVBoxLayout* verticalLayout = new QVBoxLayout(this);
-	verticalLayout->addWidget(topStatusBar);
-	verticalLayout->addWidget(ui.statusBar);
-	ui.verticalLayout->addLayout(verticalLayout);
+
+	progressBar = new QProgressBar();
+	progressBar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+	verticalLayout->addWidget(progressBar);
 	progressBar->hide();
 
+	verticalLayout->addWidget(ui.statusBar);
+	ui.verticalLayout->addLayout(verticalLayout);
+	
 	ui.statusBar->addWidget(label = new QLabel(this));
 	label->setText("");
 
 	ui.actionNew_Song->setDisabled(true);
 
-
-
 	validatedSongUrl = QRegExp("^(https\\:\\/\\/(www\\.)?mychords\\.net\\/)([\\da-z-_\\.]+\\/)*([\\da-z-_\\.]+\\.html)$");
+
+	homepage = "https://mychords.net/";
+	on_actionHome_page_triggered();
+	//on_webEngineView_urlChanged(homepage);
 }
 
 MainWindow::~MainWindow(){
@@ -78,16 +83,9 @@ void MainWindow::on_actionNew_Song_triggered() {
 			outputHTML << parsedPage.toUtf8();
 				qDebug() << parsedPage;
 			newSong->close();
-			ui.webEngineView->load(QDir::currentPath() + "/Playlists/" + playlistName + '/' + title + ".html");
 		}
 
 	});
-
-	//ui.webEngineView->page()->download(ui.webEngineView->url());
-
-	//QFile testQFile(QDir::currentPath() + "/Playlists/" + ui.treeView->selectionModel()->selectedIndexes().at(0).data().toString() + '/' + ui.webEngineView->title() + ".html");
-	//testQFile.open(QIODevice::ReadOnly);
-	//ui.webEngineView->setHtml(QTextStream(&testQFile).readAll());
 }
 
 void MainWindow::on_actionNew_Playlist_triggered() {
@@ -122,7 +120,7 @@ void MainWindow::on_actionDelete_selection_triggered() {
 }
 
 void MainWindow::on_actionHome_page_triggered() {
-	ui.webEngineView->load(QUrl("https://mychords.net/"));
+	ui.webEngineView->load(homepage);
 }
 
 void MainWindow::on_actionGo_back_triggered() {

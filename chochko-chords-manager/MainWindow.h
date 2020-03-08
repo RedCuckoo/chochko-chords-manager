@@ -17,10 +17,9 @@ public:
 
 private:
 	Ui::MainWindow ui;
-	QStatusBar* topStatusBar;
 	QProgressBar* progressBar;
 	QLabel* label;
-
+	QUrl homepage;
 	QRegExp validatedSongUrl;
 	
 

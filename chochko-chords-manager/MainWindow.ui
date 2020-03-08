@@ -54,7 +54,7 @@
           </property>
           <property name="url">
            <url>
-            <string>https://mychords.net/</string>
+            <string>about:blank</string>
            </url>
           </property>
          </widget>
