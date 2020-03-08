@@ -19,6 +19,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -50,11 +51,11 @@
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
   </ImportGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <QtInstall>5.13.1</QtInstall>
+    <QtInstall>5.14.1_x64</QtInstall>
     <QtModules>core;gui;webengine;webenginewidgets;widgets</QtModules>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <QtInstall>5.13.1</QtInstall>
+    <QtInstall>5.14.1_x64</QtInstall>
     <QtModules>core;gui;webengine;webenginewidgets;widgets</QtModules>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
@@ -67,11 +68,14 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

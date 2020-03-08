@@ -97,6 +97,7 @@ void MainWindow::on_actionNew_Playlist_triggered() {
 
 void MainWindow::on_actionDelete_selection_triggered() {
 	QModelIndexList selectedIndexes = ui.treeView->selectionModel()->selectedIndexes();
+
 	if (selectedIndexes.size() > 0) {
 		QString selectionName = selectedIndexes.at(0).data().toString();
 

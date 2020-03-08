@@ -1,7 +1,13 @@
 #include "HTMLParser.h"
 #include <QDebug>
-#include <QDir>
 #include <QWebEnginePage>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QUrl>
+#include <QImageReader>
+#include <QImage>
+#include <QDir>
+#include <QLabel>
 
 HTMLParser::HTMLParser(QString toParse, QObject *parent) : QObject(parent), originalCode(toParse){
 	expressionToParse.setMinimal(true);
@@ -11,7 +17,7 @@ HTMLParser::HTMLParser(QString toParse, QObject *parent) : QObject(parent), orig
 	textWithChords = expressionToParse.cap(3);
 
 	expressionToFixChords.setMinimal(true);
-	textWithChords.replace(expressionToFixChords, "<a href=\"../\\1\">\\2</a>");
+	textWithChords.replace(expressionToFixChords, "<a href=\"../../\\1\">\\2</a>");
 
 
 	parseAndDownload();
@@ -39,13 +45,20 @@ void HTMLParser::parseAndDownload() {
 		QString urlToDownload = "https://mychords.net/" + expressionToDownloadChords.cap(1);
 		QString fileLocation = QDir::currentPath() + "/" + expressionToDownloadChords.cap(1);
 
+		QNetworkAccessManager* manager = new QNetworkAccessManager();
+		QNetworkReply* reply = manager->get(QNetworkRequest(QUrl(urlToDownload)));
 
-		//download.setPath()
+		QEventLoop eventLoop;
+		connect(reply, SIGNAL(finished()), &eventLoop, SLOT(quit()));
+		eventLoop.exec();
 
-		QWebEnginePage toSave;
-		toSave.setUrl(QUrl(urlToDownload));
-
-		qDebug() << toSave.url();
-		toSave.save(QDir::currentPath());
+		QImage img;
+		if (reply->error() == QNetworkReply::NoError) {
+			QImageReader imageReader(reply);
+			img = imageReader.read();
+			qDebug() << img;
+			if (!img.isNull())
+				img.save(fileLocation);
+		}
 	}
 }
