@@ -18,7 +18,10 @@
     <item row="0" column="0">
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout">
+       <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,3">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
         <item>
          <widget class="QTreeView" name="treeView">
           <property name="sizePolicy">
@@ -54,7 +57,7 @@
           </property>
           <property name="url">
            <url>
-            <string>https://mychords.net/</string>
+            <string>about:blank</string>
            </url>
           </property>
          </widget>
@@ -83,20 +86,22 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionGo_back"/>
+   <addaction name="actionGo_forward"/>
+   <addaction name="actionRefresh"/>
    <addaction name="actionHome_page"/>
    <addaction name="separator"/>
-   <addaction name="actionNew_Playlist"/>
+   <addaction name="actionNew_playlist"/>
    <addaction name="actionDelete_selection"/>
-   <addaction name="actionNew_Song"/>
+   <addaction name="actionNew_song"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="actionNew_Song">
+  <action name="actionNew_song">
    <property name="icon">
     <iconset resource="resource_file.qrc">
-     <normaloff>:/icons/Resources/new_file.png</normaloff>:/icons/Resources/new_file.png</iconset>
+     <normaloff>:/icons/Resources/new-file.png</normaloff>:/icons/Resources/new-file.png</iconset>
    </property>
    <property name="text">
-    <string>New Song</string>
+    <string>New song</string>
    </property>
    <property name="toolTip">
     <string>Add new song to the playlist</string>
@@ -105,13 +110,13 @@
     <string>Ctrl+N</string>
    </property>
   </action>
-  <action name="actionNew_Playlist">
+  <action name="actionNew_playlist">
    <property name="icon">
     <iconset resource="resource_file.qrc">
-     <normaloff>:/icons/Resources/new_folder.png</normaloff>:/icons/Resources/new_folder.png</iconset>
+     <normaloff>:/icons/Resources/new-folder.png</normaloff>:/icons/Resources/new-folder.png</iconset>
    </property>
    <property name="text">
-    <string>New Playlist</string>
+    <string>New playlist</string>
    </property>
    <property name="toolTip">
     <string>Create new playlist</string>
@@ -122,9 +127,9 @@
   </action>
   <action name="actionDelete_selection">
    <property name="icon">
-    <iconset>
-     <disabledoff>:/icons/Resources/cross.png</disabledoff>
-    </iconset>
+    <iconset resource="resource_file.qrc">
+     <normaloff>:/icons/Resources/trash-can.png</normaloff>
+     <disabledoff>:/icons/Resources/cross.png</disabledoff>:/icons/Resources/trash-can.png</iconset>
    </property>
    <property name="text">
     <string>Delete selection</string>
@@ -151,13 +156,37 @@
   <action name="actionGo_back">
    <property name="icon">
     <iconset resource="resource_file.qrc">
-     <normaloff>:/icons/Resources/back.png</normaloff>:/icons/Resources/back.png</iconset>
+     <normaloff>:/icons/Resources/arrow-left.png</normaloff>:/icons/Resources/arrow-left.png</iconset>
    </property>
    <property name="text">
     <string>Go back</string>
    </property>
    <property name="toolTip">
     <string>Go to the previous page</string>
+   </property>
+  </action>
+  <action name="actionGo_forward">
+   <property name="icon">
+    <iconset resource="resource_file.qrc">
+     <normaloff>:/icons/Resources/arrow-right.png</normaloff>:/icons/Resources/arrow-right.png</iconset>
+   </property>
+   <property name="text">
+    <string>Go forward</string>
+   </property>
+   <property name="toolTip">
+    <string>Go to the next page</string>
+   </property>
+  </action>
+  <action name="actionRefresh">
+   <property name="icon">
+    <iconset resource="resource_file.qrc">
+     <normaloff>:/icons/Resources/refresh.png</normaloff>:/icons/Resources/refresh.png</iconset>
+   </property>
+   <property name="text">
+    <string>Refresh page</string>
+   </property>
+   <property name="toolTip">
+    <string>Click to refresh page</string>
    </property>
   </action>
  </widget>

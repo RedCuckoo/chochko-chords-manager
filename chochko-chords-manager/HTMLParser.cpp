@@ -56,7 +56,7 @@ void HTMLParser::parseAndDownload() {
 		if (reply->error() == QNetworkReply::NoError) {
 			QImageReader imageReader(reply);
 			img = imageReader.read();
-			qDebug() << img;
+
 			if (!img.isNull())
 				img.save(fileLocation);
 		}
