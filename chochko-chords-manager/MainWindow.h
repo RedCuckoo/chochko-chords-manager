@@ -24,13 +24,17 @@ private:
 	
 
 private slots:
-	void on_actionNew_Song_triggered();
-	void on_actionNew_Playlist_triggered();
-	void on_actionDelete_selection_triggered();
-	void on_actionHome_page_triggered();
 	void on_actionGo_back_triggered();
+	void on_actionGo_forward_triggered();
+	void on_actionRefresh_triggered();
+	void on_actionHome_page_triggered();
+	void on_actionNew_playlist_triggered();
+	void on_actionDelete_selection_triggered();
+	void on_actionNew_song_triggered();
+
 	void on_webEngineView_loadFinished();
 	void on_webEngineView_loadProgress(int);
 	void on_webEngineView_urlChanged(QUrl);
+
 	void on_treeView_doubleClicked(QModelIndex);
 };

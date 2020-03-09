@@ -22,7 +22,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent){
 
 
 	QFileSystemModel* playlistsModel = new QFileSystemModel;
-	//qDebug() << QDir::currentPath();
 	playlistsModel->setRootPath(QDir::currentPath());
 	
 	ui.treeView->setModel(playlistsModel);
@@ -48,13 +47,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent){
 	ui.statusBar->addWidget(label = new QLabel(this));
 	label->setText("");
 
-	ui.actionNew_Song->setDisabled(true);
+	ui.actionNew_song->setDisabled(true);
 
 	validatedSongUrl = QRegExp("^(https\\:\\/\\/(www\\.)?mychords\\.net\\/)([\\da-z-_\\.]+\\/)*([\\da-z-_\\.]+\\.html)$");
 
 	homepage = "https://mychords.net/";
 	on_actionHome_page_triggered();
-	//on_webEngineView_urlChanged(homepage);
 }
 
 MainWindow::~MainWindow(){
@@ -62,9 +60,13 @@ MainWindow::~MainWindow(){
 }
 
 //redo
-void MainWindow::on_actionNew_Song_triggered() {
+void MainWindow::on_actionNew_song_triggered() {
 	//get html code
 	ui.webEngineView->page()->toHtml([this](const QString& a) {
+		ui.actionNew_song->setEnabled(false);
+		progressBar->setMaximum(0);
+		progressBar->setTextVisible(false);
+		progressBar->show();
 		QString parsedPage = HTMLParser(a, this).getText();
 		parsedPage.replace(QRegExp("^"), "For original page click <a href=\"" + ui.webEngineView->url().toString() + "\">here</a>");
 
@@ -84,11 +86,13 @@ void MainWindow::on_actionNew_Song_triggered() {
 				qDebug() << parsedPage;
 			newSong->close();
 		}
-
+		progressBar->hide();
+		progressBar->setMaximum(100);
+		progressBar->setTextVisible(true);
 	});
 }
 
-void MainWindow::on_actionNew_Playlist_triggered() {
+void MainWindow::on_actionNew_playlist_triggered() {
 	AddPlaylistDialog* createPlaylist = new AddPlaylistDialog(this);
 	createPlaylist->open();
 }
@@ -124,11 +128,28 @@ void MainWindow::on_actionHome_page_triggered() {
 }
 
 void MainWindow::on_actionGo_back_triggered() {
-	ui.webEngineView->back();
+	ui.webEngineView->triggerPageAction(QWebEnginePage::Back);
+}
+
+void MainWindow::on_actionGo_forward_triggered() {
+	ui.webEngineView->triggerPageAction(QWebEnginePage::Forward);
+}
+
+void MainWindow::on_actionRefresh_triggered() {
+	ui.webEngineView->triggerPageAction(QWebEnginePage::Reload);
 }
 
 void MainWindow::on_webEngineView_loadFinished() {
 	progressBar->hide();
+
+	QString currentUrl = label->text();
+
+	if (currentUrl.contains(validatedSongUrl)) {
+		ui.actionNew_song->setEnabled(true);
+	}
+	else {
+		ui.actionNew_song->setDisabled(true);
+	}
 }
 
 void MainWindow::on_webEngineView_loadProgress(int progress) {
@@ -140,13 +161,6 @@ void MainWindow::on_webEngineView_urlChanged(QUrl newUrl) {
 	QString currentUrl = newUrl.toString();
 
 	label->setText(currentUrl);
-	
-	if (currentUrl.contains(validatedSongUrl)){
-		ui.actionNew_Song->setEnabled(true);
-	}
-	else {
-		ui.actionNew_Song->setDisabled(true);
-	}
 }
 
 void MainWindow::on_treeView_doubleClicked(QModelIndex index) {
