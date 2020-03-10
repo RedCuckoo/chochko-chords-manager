@@ -97,6 +97,7 @@
     <ClCompile Include="HTMLParser.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="QTTestClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="GreetingMessageBox.h" />
@@ -119,6 +120,7 @@
     <QtMoc Include="HTMLParser.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="QTTestClass.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

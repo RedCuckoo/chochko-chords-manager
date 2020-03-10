@@ -63,7 +63,7 @@ MainWindow::~MainWindow(){
 void MainWindow::on_actionNew_song_triggered() {
 	//get html code
 	ui.webEngineView->page()->toHtml([this](const QString& a) {
-		ui.actionNew_song->setEnabled(false);
+		//ui.actionNew_song->setEnabled(false);
 		progressBar->setMaximum(0);
 		progressBar->setTextVisible(false);
 		progressBar->show();
@@ -142,14 +142,9 @@ void MainWindow::on_actionRefresh_triggered() {
 void MainWindow::on_webEngineView_loadFinished() {
 	progressBar->hide();
 
-	QString currentUrl = label->text();
+	//QString currentUrl = label->text();
 
-	if (currentUrl.contains(validatedSongUrl)) {
-		ui.actionNew_song->setEnabled(true);
-	}
-	else {
-		ui.actionNew_song->setDisabled(true);
-	}
+
 }
 
 void MainWindow::on_webEngineView_loadProgress(int progress) {
@@ -161,6 +156,13 @@ void MainWindow::on_webEngineView_urlChanged(QUrl newUrl) {
 	QString currentUrl = newUrl.toString();
 
 	label->setText(currentUrl);
+
+	if (currentUrl.contains(validatedSongUrl)) {
+		ui.actionNew_song->setEnabled(true);
+	}
+	else {
+		ui.actionNew_song->setDisabled(true);
+	}
 }
 
 void MainWindow::on_treeView_doubleClicked(QModelIndex index) {

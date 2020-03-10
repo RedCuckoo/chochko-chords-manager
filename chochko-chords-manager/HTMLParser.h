@@ -17,7 +17,7 @@ private:
 	*/
 	QRegExp expressionToParse = QRegExp("<div class=\"b-words__text\".*<pre class=\"w-words__text\" itemprop=\"text\">(.*<a href=.*>(.*)?\\(.*<\\/a><\\/div>)?(.*)<\\/pre>");
 	QRegExp expressionToFixChords = QRegExp("<span.*'\\/(.*)\\?ch201.*>\">(.*)<\\/a><\\/span>");
-	QRegExp expressionToDownloadChords = QRegExp("<a href=\"..\\/([^\"]+.png)");
+	QRegExp expressionToDownloadChords = QRegExp("<a href=\"..\\/..\\/([^\"]+.png)");
 	QString originalCode;
 	QString strokeType;
 	QString textWithChords;
