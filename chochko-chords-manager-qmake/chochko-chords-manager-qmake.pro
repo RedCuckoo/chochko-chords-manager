@@ -1,8 +1,8 @@
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets webengine webenginewidgets
 
-CONFIG += c++11
+CONFIG += c++17
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -16,14 +16,21 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    main.cpp \
-    mainwindow.cpp
+    AddPlaylistDialog.cpp \
+    HTMLParser.cpp \
+    MainWindow.cpp \
+    MainWindow.cpp \
+    main.cpp
 
 HEADERS += \
-    mainwindow.h
+    AddPlaylistDialog.h \
+    HTMLParser.h \
+    MainWindow.h \
+    MainWindow.h
 
 FORMS += \
-    mainwindow.ui
+    AddPlaylistDialog.ui \
+    MainWindow.ui
 
 TRANSLATIONS += \
     chochko-chords-manager-qmake_uk_UA.ts
@@ -32,3 +39,8 @@ TRANSLATIONS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    resource_file.qrc
+
+RC_ICONS = icon.ico

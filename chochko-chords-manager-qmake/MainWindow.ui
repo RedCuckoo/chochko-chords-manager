@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>663</width>
+    <height>469</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,3">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QTreeView" name="treeView">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>15</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="sizeAdjustPolicy">
+           <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="selectionMode">
+           <enum>QAbstractItemView::SingleSelection</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QWebEngineView" name="webEngineView">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="url">
+           <url>
+            <string>about:blank</string>
+           </url>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>663</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionGo_back"/>
+   <addaction name="actionGo_forward"/>
+   <addaction name="actionRefresh"/>
+   <addaction name="actionHome_page"/>
+   <addaction name="separator"/>
+   <addaction name="actionNew_playlist"/>
+   <addaction name="actionDelete_selection"/>
+   <addaction name="actionNew_song"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionNew_song">
+   <property name="icon">
+    <iconset resource="resource_file.qrc">
+     <normaloff>:/icons/Resources/new-file.png</normaloff>:/icons/Resources/new-file.png</iconset>
+   </property>
+   <property name="text">
+    <string>New song</string>
+   </property>
+   <property name="toolTip">
+    <string>Add new song to the playlist</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionNew_playlist">
+   <property name="icon">
+    <iconset resource="resource_file.qrc">
+     <normaloff>:/icons/Resources/new-folder.png</normaloff>:/icons/Resources/new-folder.png</iconset>
+   </property>
+   <property name="text">
+    <string>New playlist</string>
+   </property>
+   <property name="toolTip">
+    <string>Create new playlist</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="actionDelete_selection">
+   <property name="icon">
+    <iconset resource="resource_file.qrc">
+     <normaloff>:/icons/Resources/trash-can.png</normaloff>
+     <disabledoff>:/icons/Resources/cross.png</disabledoff>:/icons/Resources/trash-can.png</iconset>
+   </property>
+   <property name="text">
+    <string>Delete selection</string>
+   </property>
+   <property name="toolTip">
+    <string>To delete the selected item</string>
+   </property>
+   <property name="shortcut">
+    <string>Del</string>
+   </property>
+  </action>
+  <action name="actionHome_page">
+   <property name="icon">
+    <iconset resource="resource_file.qrc">
+     <normaloff>:/icons/Resources/homepage.png</normaloff>:/icons/Resources/homepage.png</iconset>
+   </property>
+   <property name="text">
+    <string>Home page</string>
+   </property>
+   <property name="toolTip">
+    <string>Go to the home page</string>
+   </property>
+  </action>
+  <action name="actionGo_back">
+   <property name="icon">
+    <iconset resource="resource_file.qrc">
+     <normaloff>:/icons/Resources/arrow-left.png</normaloff>:/icons/Resources/arrow-left.png</iconset>
+   </property>
+   <property name="text">
+    <string>Go back</string>
+   </property>
+   <property name="toolTip">
+    <string>Go to the previous page</string>
+   </property>
+  </action>
+  <action name="actionGo_forward">
+   <property name="icon">
+    <iconset resource="resource_file.qrc">
+     <normaloff>:/icons/Resources/arrow-right.png</normaloff>:/icons/Resources/arrow-right.png</iconset>
+   </property>
+   <property name="text">
+    <string>Go forward</string>
+   </property>
+   <property name="toolTip">
+    <string>Go to the next page</string>
+   </property>
+  </action>
+  <action name="actionRefresh">
+   <property name="icon">
+    <iconset resource="resource_file.qrc">
+     <normaloff>:/icons/Resources/refresh.png</normaloff>:/icons/Resources/refresh.png</iconset>
+   </property>
+   <property name="text">
+    <string>Refresh page</string>
+   </property>
+   <property name="toolTip">
+    <string>Click to refresh page</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QWebEngineView</class>
+   <extends>QWidget</extends>
+   <header location="global">QtWebEngineWidgets/QWebEngineView</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="resource_file.qrc"/>
+ </resources>
+ <connections/>
+</ui>
