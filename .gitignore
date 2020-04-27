@@ -634,3 +634,6 @@ tmp/
 # qbs builds
 /*-debug/
 /*-release/
+
+test-chochko-chords-manager/
+
