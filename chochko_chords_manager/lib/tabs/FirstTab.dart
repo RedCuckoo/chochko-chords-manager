@@ -13,43 +13,92 @@ class FirstTab  extends StatefulWidget{
   _FirstTabState createState() => _FirstTabState();
 }
 
-class _FirstTabState extends State<FirstTab>{
-  final items = new List<Directory>();
+class _FirstTabState extends State<FirstTab> with AutomaticKeepAliveClientMixin{
+  Directory _curDir;
+  List<Directory> _curFiles;
+  int _curFilesAmount;
+  Directory _folderDirectory;
+  Directory _appDirectory;
 
   @override
-  void initState() async{
-    String _folderPath;
-    Directory _folderDirectory;
-    widget._appPath.then((onValue){
-      _folderPath = onValue + "/CCM_files/";
-      _folderDirectory= Directory(_folderPath);
-    });
-
-    _folderDirectory.create(recursive: true).then((Directory dir) {
-      print(dir.path);
-    });
+  void initState(){
+    initAsync();
 
     super.initState();
   }
 
+  void initAsync() async{
+    String _folderPath;
+    widget._appPath.then((onValue){
+      _appDirectory = Directory(onValue);
+      _folderPath = onValue + "/CCM_files/";
+      _folderDirectory= Directory(_folderPath);
+      _curDir = _folderDirectory;
+
+      _folderDirectory.create(recursive: true).then((Directory dir) {
+        print(dir.path);
+      });
+
+      _updateCurFiles();
+    });
+  }
+
+  double sideLength = 50;
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
         backgroundColor: Colors.purple[50],
         body: Center(
-          child: GridView.count(
-            crossAxisCount: 2,
-            children: List.generate(100, (index){
-              return Center(
-                child:Text(
-                  'Item $index',
-                  style: Theme.of(context).textTheme.headline,
+          child: Container(
+                    child: InkWell(
+                      splashColor: Colors.deepPurple[400],
+                      highlightColor: Colors.purple[100],
+                      radius:50,
+                      borderRadius: BorderRadius.circular(3.0),
+                      onTap: (){
+                      },
+                      child:  GridView.count(
+                        crossAxisCount: 2,
+                        children: List.generate(5,(index){
+                          return Column(
+                          children: <Widget>[
+                          Icon(
+                            Icons.folder,
+                            size: 160,
+                            color: Colors.deepPurple[400],
+                            ),
+                            Text('folder',
+                             textAlign: TextAlign.right,
+                              )
+                          ]
+                        );
+                        }),
+                    )
                 ),
-              );
-            }),
-          ),
-        )
+
+
+            ),
+        ),
+
+
+        appBar: AppBar(
+          title: Text('Playlists'),
+          backgroundColor: Colors.deepPurple[400],
+        ),
     );
+
   }
+
+ void _updateCurFiles(){
+    _curDir.list(recursive: false, followLinks: false).listen((FileSystemEntity entity) {
+        print(entity.path);
+        _curFiles.add(Directory(entity.path));
+      });
+  }
+
+  @override
+  bool get wantKeepAlive => true;
 
 }

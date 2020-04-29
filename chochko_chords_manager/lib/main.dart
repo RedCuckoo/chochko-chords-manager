@@ -49,7 +49,7 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin{
               icon: Icon(Icons.favorite),
             ),
             Tab(
-              icon:Icon(Icons.airplanemode_active),
+              icon:Icon(Icons.audiotrack),
             )
           ],
           controller: controller,
