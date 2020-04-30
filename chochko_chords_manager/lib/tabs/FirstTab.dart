@@ -1,3 +1,4 @@
+import 'package:chochkochordsmanager/helpers/HTML_parser.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'dart:async';
@@ -38,6 +39,8 @@ class _FirstTabState extends State<FirstTab> with AutomaticKeepAliveClientMixin{
       _folderDirectory.create(recursive: true).then((Directory dir) {
         print(dir.path);
       });
+
+      HTMLParser().parseToFile(_folderPath+"f.html");
 
       _updateCurFiles();
     });
