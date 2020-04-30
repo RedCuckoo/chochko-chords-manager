@@ -1,48 +1,40 @@
 import 'package:chochkochordsmanager/helpers/HTML_parser.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
+import 'dart:io' as io;
 import 'dart:async';
 import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
 
 class FirstTab  extends StatefulWidget{
-  Future<String> get _appPath async {
-    final directory = await getApplicationDocumentsDirectory();
-    return directory.path;
-  }
+  final TabController controller;
+
+  FirstTab(this.controller);
 
   @override
   _FirstTabState createState() => _FirstTabState();
 }
 
-class _FirstTabState extends State<FirstTab> with AutomaticKeepAliveClientMixin{
-  Directory _curDir;
-  List<Directory> _curFiles;
-  int _curFilesAmount;
-  Directory _folderDirectory;
-  Directory _appDirectory;
+class _FirstTabState extends State<FirstTab>{
+  var _curFiles = new List<FileSystemEntity>();
 
   @override
   void initState(){
-    initAsync();
-
     super.initState();
+    initAsync();
+    print("init");
   }
 
   void initAsync() async{
-    String _folderPath;
-    widget._appPath.then((onValue){
-      _appDirectory = Directory(onValue);
-      _folderPath = onValue + "/CCM_files/";
-      _folderDirectory= Directory(_folderPath);
-      _curDir = _folderDirectory;
+    var directory = (await getApplicationDocumentsDirectory()).path;
+    directory = directory + "/CCM_files/";
+    Directory(directory).create(recursive: true).then((Directory dir) {
+      print(dir.path);
+    });
 
-      _folderDirectory.create(recursive: true).then((Directory dir) {
-        print(dir.path);
-      });
-
-      HTMLParser().parseToFile(_folderPath+"f.html");
-
-      _updateCurFiles();
+    setState(() {
+      //TODO: remake for asynchronous list
+      _curFiles = io.Directory(directory).listSync();
     });
   }
 
@@ -50,58 +42,51 @@ class _FirstTabState extends State<FirstTab> with AutomaticKeepAliveClientMixin{
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
+    print("build");
     return Scaffold(
-        backgroundColor: Colors.purple[50],
-        body: Center(
-          child: Container(
-                    child: InkWell(
-                      splashColor: Colors.deepPurple[400],
-                      highlightColor: Colors.purple[100],
-                      radius:50,
-                      borderRadius: BorderRadius.circular(3.0),
-                      onTap: (){
-                      },
-                      child:  GridView.count(
-                        crossAxisCount: 2,
-                        children: List.generate(5,(index){
-                          return Column(
-                          children: <Widget>[
-                          Icon(
-                            Icons.folder,
-                            size: 160,
-                            color: Colors.deepPurple[400],
-                            ),
-                            Text('folder',
-                             textAlign: TextAlign.right,
-                              )
-                          ]
-                        );
-                        }),
-                    )
-                ),
-
-
-            ),
-        ),
-
-
-        appBar: AppBar(
-          title: Text('Playlists'),
-          backgroundColor: Colors.deepPurple[400],
-        ),
+       appBar: AppBar(
+         title: Text("Saved"),
+         backgroundColor: Colors.deepPurple[400],
+       ),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: _buildList(),
+          )
+        ],
+      ),
     );
 
   }
+  var _iconType = 1;
+  Widget _buildRow(File file){
+    return ListTile(
+      title: Text(path.basenameWithoutExtension(file.path)),
+      onTap: (){
+        widget.controller.animateTo(1);
+      },
+      trailing: IconButton(
+        icon: Icon((_iconType == 0)? Icons.favorite_border : Icons.favorite),
+        color: Colors.red,
+        onPressed: (){
+          setState((){
+            _iconType = (_iconType == 0) ? 1 : 0;
+          });
+        },
+      )
 
- void _updateCurFiles(){
-    _curDir.list(recursive: false, followLinks: false).listen((FileSystemEntity entity) {
-        print(entity.path);
-        _curFiles.add(Directory(entity.path));
-      });
+    );
   }
 
-  @override
-  bool get wantKeepAlive => true;
+  Widget _buildList(){
+    var list = new List<Widget>();
+    for (var elem in _curFiles){
+      list.add(_buildRow(elem));
+    }
+
+    return ListView(
+        children: list,
+    );
+  }
 
 }

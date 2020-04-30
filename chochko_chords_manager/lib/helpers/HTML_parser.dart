@@ -6,27 +6,39 @@ import 'dart:io';
 
 class HTMLParser {
 
-  void parseToFile(String fileLocation) async {
-    var response = await http.Client().get(Uri.parse(
-        "https://mychords.net/j_mad/129379-enya-mad-kacheli-ft-enya-mad.html"));
+  static Future<int> parseToFile(String url, String directoryLocation) async {
+    if (url.endsWith(".html") == false)
+      return 3;
+
+    var response = await http.Client().get(Uri.parse(url));
 
     if (response.statusCode != 200) {
       //TODO: throw exception?
-      return null;
+      return 0;
     }
 
     print("KUKU");
 
     var document = parse(response.body);
     var songTextDomElement = document.getElementsByClassName("w-words__text");//[0].text;
+    var title = document.getElementsByTagName("title");
+    var fileLocation = directoryLocation + title[0].text+".html";
+    print(title[0].text);
+    print(fileLocation);
     String songText;
     if (songTextDomElement.length != 0){
       songText = songTextDomElement[0].text;
 
-      File(fileLocation).writeAsString(songText);
-      File(fileLocation).readAsString().then((onValue){print(onValue);});
-    }
+      if (await File(fileLocation).exists() == true){
+        return 2;
+      }
 
+      File(fileLocation).create();
+
+      File(fileLocation).writeAsString(songText);
+      //File(fileLocation).readAsString().then((onValue){print(onValue);});
+    }
+    return 1;
    // print(songText);
   }
 }

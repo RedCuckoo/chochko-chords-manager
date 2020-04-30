@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:chochkochordsmanager/tabs/FirstTab.dart';
 import 'package:chochkochordsmanager/tabs/SecondTab.dart';
+import 'package:path_provider/path_provider.dart';
 
 void main(){
   runApp(MaterialApp(
@@ -20,7 +21,6 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin{
   @override
   void initState(){
     super.initState();
-
     controller = TabController(vsync: this, length: 2, initialIndex: 1);
   }
 
@@ -38,7 +38,7 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin{
         backgroundColor: Colors.purple,
       ),
       body: TabBarView(
-        children: <Widget>[FirstTab(),SecondTab()],
+        children: <Widget>[FirstTab(controller),SecondTab(controller)],
         controller: controller,
       ),
       bottomNavigationBar: Material(
@@ -53,6 +53,7 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin{
             )
           ],
           controller: controller,
+          indicatorColor: Colors.white,
         ),
       ),
     );
