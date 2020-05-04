@@ -21,10 +21,9 @@ class _HomeState extends State<Home> {
   var _curFiles = new List<FileSystemEntity>();
   var directory;
   var tempDirectory;
-  Completer<WebViewController> controller = Completer<WebViewController>();
+  WebViewController controller;
   String currentUrl = "mychords.net/";
   final initialUrl = "www.mychords.net/";
-  bool availableConnection = true;
 
   @override
   void initState() {
@@ -60,55 +59,48 @@ class _HomeState extends State<Home> {
     try {
       final result = await InternetAddress.lookup('www.mychords.net');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        availableConnection = true;
+        print("true");
         return true;
       }
     } on io.SocketException catch (_) {
-      availableConnection = false;
+      print("false");
       return false;
     }
 
     return true;
   }
 
-
   Widget _buildRow(File file) {
-    return FutureBuilder<WebViewController>(
-        future: controller.future,
-        builder: (BuildContext context,
-            AsyncSnapshot<WebViewController> controller) {
-          return ListTile(
-              title: Text(path.basenameWithoutExtension(file.path)),
-              onTap: () async {
-                if (await checkConnection() == true) {
-                  var url;
-                  await file.readAsString().then((onValue) {
-                    print("here");
-                    url = json.decode(onValue)['url'];
-                  });
-                  print(url);
-                  await controller.data.loadUrl(url);
-                  Navigator.pop(context);
-                  print("connected");
-                } else {
-                  String text;
-                  await file.readAsString().then((onValue) {
-                    print("here");
-                    text = json.decode(onValue)['text'];
-                  });
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => OfflineViewer(text)));
-                  print('not connected');
-                }
-              },
-              trailing: IconButton(
-                icon: Icon(Icons.favorite),
-                color: Colors.red,
-                onPressed: () {},
-              ));
-        });
+    return ListTile(
+        title: Text(path.basenameWithoutExtension(file.path)),
+        onTap: () async {
+          if (await checkConnection() == true) {
+            var url;
+            await file.readAsString().then((onValue) {
+              print("here");
+              url = json.decode(onValue)['url'];
+            });
+            print(url);
+            controller.loadUrl(url);
+            Navigator.pop(context);
+            print("connected");
+          }
+          else {
+            String text;
+            await file.readAsString().then((onValue) {
+              print("here");
+              text = json.decode(onValue)['text'];
+            });
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => OfflineViewer(text)));
+            print('not connected');
+          }
+        },
+        trailing: IconButton(
+          icon: Icon(Icons.favorite),
+          color: Colors.red,
+          onPressed: () {},
+        ));
   }
 
   Widget _buildDrawerList() {
@@ -150,7 +142,7 @@ class _HomeState extends State<Home> {
         initialUrl: 'https://mychords.net/',
         javascriptMode: JavascriptMode.unrestricted,
         onWebViewCreated: (WebViewController webViewController) {
-          this.controller.complete(webViewController);
+          this.controller = webViewController;
         },
         navigationDelegate: (NavigationRequest request) {
           if (request.url.startsWith('https://mychords.net/')) {
@@ -165,41 +157,39 @@ class _HomeState extends State<Home> {
         gestureNavigationEnabled: true,
       ),
       floatingActionButton: FloatingActionButton(
-          child: Icon((availableConnection) ? Icons.favorite : Icons.refresh),
+          child: Icon(Icons.favorite),
           //// Icon(Icons.favorite,color:Colors.white),
           backgroundColor: Colors.purple,
           onPressed: () {
-            if (availableConnection) {
-              if (currentUrl != null) {
-                print(directory);
-                HTMLParser.parseToFile(currentUrl, directory).then((onValue) {
-                  String snackBarMessage;
-                  switch (onValue) {
-                    case (0):
-                      {
-                        snackBarMessage = "Unsuccessful loading";
-                        break;
-                      }
-                    case (1):
-                      snackBarMessage = "Successfully downloaded!";
-                      updateDrawerList();
+            var snackBar;
+            if (currentUrl != null) {
+              print(directory);
+              HTMLParser.parseToFile(currentUrl, directory).then((onValue) {
+                String snackBarMessage;
+                switch (onValue) {
+                  case (0):
+                      snackBarMessage = "Unsuccessful loading";
                       break;
-                    case (2):
-                      snackBarMessage = "Already saved";
-                      break;
-                    case (3):
-                      snackBarMessage = "That's not a chords page";
-                      break;
-                  }
+                  case (1):
+                    snackBarMessage = "Successfully downloaded!";
+                    updateDrawerList();
+                    break;
+                  case (2):
+                    snackBarMessage = "Already saved";
+                    break;
+                  case (3):
+                    snackBarMessage = "That's not a chords page";
+                    break;
+                }
 
-                  final snackBar = SnackBar(content: Text(snackBarMessage));
-                  _scaffoldKey.currentState.showSnackBar(snackBar);
-                });
-              }
-            } else {
-              //connection not available
-              //_updatePage();
+                snackBar = SnackBar(content: Text(snackBarMessage));
+              });
             }
+            else{
+              snackBar = SnackBar(content:Text("You are offline"));
+            }
+
+            _scaffoldKey.currentState.showSnackBar(snackBar);
           }),
     );
   }
