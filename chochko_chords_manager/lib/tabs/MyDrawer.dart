@@ -7,15 +7,13 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 
 class FirstTab  extends StatefulWidget{
-  final TabController controller;
-
-  FirstTab(this.controller);
+  FirstTab();
 
   @override
   _FirstTabState createState() => _FirstTabState();
 }
 
-class _FirstTabState extends State<FirstTab>{
+class _FirstTabState extends State<FirstTab> with AutomaticKeepAliveClientMixin{
   var _curFiles = new List<FileSystemEntity>();
 
   @override
@@ -38,14 +36,20 @@ class _FirstTabState extends State<FirstTab>{
     });
   }
 
-  double sideLength = 50;
-
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     print("build");
-    return Scaffold(
-     //0 drawerEdgeDragWidth: 0,
-       drawer: Drawer(),
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      color: Colors.white,
+      child: _buildList(),
+    );
+
+
+    /*  Scaffold(
+     // drawerEdgeDragWidth: 0,
        appBar: AppBar(
          title: Text("Saved"),
          backgroundColor: Colors.deepPurple[400],
@@ -57,7 +61,7 @@ class _FirstTabState extends State<FirstTab>{
           )
         ],
       ),
-    );
+    );*/
 
   }
   var _iconType = 1;
@@ -67,7 +71,7 @@ class _FirstTabState extends State<FirstTab>{
       onTap: (){
         //widget.controller.animateTo(1);
         //return Text("sdf");
-        Scaffold.of(context).openDrawer();
+        //Scaffold.of(context).openDrawer();
       },
       trailing: IconButton(
         icon: Icon((_iconType == 0)? Icons.favorite_border : Icons.favorite),
@@ -92,5 +96,8 @@ class _FirstTabState extends State<FirstTab>{
         children: list,
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 
 }
