@@ -33,6 +33,7 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(),
       appBar: AppBar(
         title: Text("Chochko Chords Manager"),
         backgroundColor: Colors.purple,

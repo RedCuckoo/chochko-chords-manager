@@ -44,6 +44,8 @@ class _FirstTabState extends State<FirstTab>{
   Widget build(BuildContext context) {
     print("build");
     return Scaffold(
+     //0 drawerEdgeDragWidth: 0,
+       drawer: Drawer(),
        appBar: AppBar(
          title: Text("Saved"),
          backgroundColor: Colors.deepPurple[400],
@@ -63,7 +65,9 @@ class _FirstTabState extends State<FirstTab>{
     return ListTile(
       title: Text(path.basenameWithoutExtension(file.path)),
       onTap: (){
-        widget.controller.animateTo(1);
+        //widget.controller.animateTo(1);
+        //return Text("sdf");
+        Scaffold.of(context).openDrawer();
       },
       trailing: IconButton(
         icon: Icon((_iconType == 0)? Icons.favorite_border : Icons.favorite),

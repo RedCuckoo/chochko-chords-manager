@@ -17,6 +17,7 @@ class SecondTab extends StatefulWidget{
 
 class _SecondTabState extends State<SecondTab> with AutomaticKeepAliveClientMixin {
   String saveDirectory;
+  bool showSaved = false;
 
   @override
   void initState(){
@@ -56,7 +57,8 @@ class _SecondTabState extends State<SecondTab> with AutomaticKeepAliveClientMixi
           gestureNavigationEnabled: true,
         ),
         floatingActionButton: FloatingActionButton(
-          child:Icon(Icons.favorite,color:Colors.white),
+          child: CircularProgressIndicator(),
+          //// Icon(Icons.favorite,color:Colors.white),
           backgroundColor: Colors.purple,
           onPressed: (){
             if (currentUrl != null) {
