@@ -37,6 +37,7 @@ class HTMLParser {
       }
       
       File(fileLocation).create();
+      //TODO: add title
       File(fileLocation).writeAsString(
         json.encode({
           'url': url,

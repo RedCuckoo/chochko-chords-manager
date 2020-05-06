@@ -9,7 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:webview_flutter/webview_flutter.dart';
 import 'dart:convert';
-
+import 'package:flutter/services.dart';
 import 'OfflineViewer.dart';
 
 class Home extends StatefulWidget {
@@ -84,8 +84,7 @@ class _HomeState extends State<Home> {
             controller.loadUrl(url);
             Navigator.pop(context);
             print("connected");
-          }
-          else {
+          } else {
             String text;
             await file.readAsString().then((onValue) {
               print("here");
@@ -99,7 +98,9 @@ class _HomeState extends State<Home> {
         trailing: IconButton(
           icon: Icon(Icons.favorite),
           color: Colors.red,
-          onPressed: () {},
+          onPressed: () {
+            // showDialog(context: context);
+          },
         ));
   }
 
@@ -139,37 +140,40 @@ class _HomeState extends State<Home> {
             child: _buildDrawerList(),
           )),
       body: WebView(
-        initialUrl: 'https://mychords.net/',
-        javascriptMode: JavascriptMode.unrestricted,
-        onWebViewCreated: (WebViewController webViewController) {
-          this.controller = webViewController;
-        },
-        navigationDelegate: (NavigationRequest request) {
-          if (request.url.startsWith('https://mychords.net/')) {
-            currentUrl = request.url;
-            print("accepted url");
-            return NavigationDecision.navigate;
-          } else {
-            print("rejected url");
-            return NavigationDecision.prevent;
-          }
-        },
-        gestureNavigationEnabled: true,
-      ),
+          initialUrl: 'https://mychords.net/',
+          javascriptMode: JavascriptMode.unrestricted,
+          onWebViewCreated: (WebViewController webViewController) {
+            this.controller = webViewController;
+          },
+          navigationDelegate: (NavigationRequest request) {
+            if (request.url.startsWith('https://mychords.net/')) {
+              currentUrl = request.url;
+              print("accepted url");
+              return NavigationDecision.navigate;
+            } else {
+              print("rejected url");
+              return NavigationDecision.prevent;
+            }
+          },
+          onPageStarted: (string){
+            SystemChannels.textInput.invokeMethod('TextInput.hide');
+          },
+          gestureNavigationEnabled: true,
+        ),
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.favorite),
           //// Icon(Icons.favorite,color:Colors.white),
           backgroundColor: Colors.purple,
           onPressed: () {
-            var snackBar;
+            // var snackBar;
             if (currentUrl != null) {
               print(directory);
               HTMLParser.parseToFile(currentUrl, directory).then((onValue) {
                 String snackBarMessage;
                 switch (onValue) {
                   case (0):
-                      snackBarMessage = "Unsuccessful loading";
-                      break;
+                    snackBarMessage = "Unsuccessful loading";
+                    break;
                   case (1):
                     snackBarMessage = "Successfully downloaded!";
                     updateDrawerList();
@@ -182,14 +186,12 @@ class _HomeState extends State<Home> {
                     break;
                 }
 
-                snackBar = SnackBar(content: Text(snackBarMessage));
+                print(snackBarMessage);
+                final snackBar = SnackBar(content: Text(snackBarMessage));
+                _scaffoldKey.currentState.hideCurrentSnackBar();
+                _scaffoldKey.currentState.showSnackBar(snackBar);
               });
             }
-            else{
-              snackBar = SnackBar(content:Text("You are offline"));
-            }
-
-            _scaffoldKey.currentState.showSnackBar(snackBar);
           }),
     );
   }
