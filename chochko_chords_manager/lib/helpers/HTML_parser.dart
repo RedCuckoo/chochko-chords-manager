@@ -22,10 +22,14 @@ class HTMLParser {
     var document = parse(response.body);
 
     var songTextDomElement = document.getElementsByClassName("w-words__text");//[0].text;
-    var title = document.getElementsByTagName("title");
-    var fileLocation = directoryLocation + title[0].text+".json";
+    var title = document.getElementsByClassName("b-title");
+    print(title.length);
+    var modifiedTitle = title[0].text.replaceAll(new RegExp(r"^\s+"), "");
+    print(modifiedTitle);
 
-    print(title[0].text);
+    var fileLocation = directoryLocation + modifiedTitle+".json";
+
+
     print(fileLocation);
 
     String songText;
@@ -37,11 +41,12 @@ class HTMLParser {
       }
       
       File(fileLocation).create();
-      //TODO: add title
+
       File(fileLocation).writeAsString(
         json.encode({
           'url': url,
-          'text': songText}
+          'text': "Материал взято из сайта https://mychords.net\n\n" + songText,
+        }
         )
       );
     }

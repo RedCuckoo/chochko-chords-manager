@@ -20,7 +20,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   var _curFiles = new List<FileSystemEntity>();
   var directory;
-  var tempDirectory;
+
   WebViewController controller;
   String currentUrl = "mychords.net/";
   final initialUrl = "www.mychords.net/";
@@ -36,22 +36,24 @@ class _HomeState extends State<Home> {
     directory = (await getApplicationDocumentsDirectory()).path;
     directory = directory + "/CCM_files/";
 
-    tempDirectory = (await getTemporaryDirectory()).path;
-    print(tempDirectory);
-
     await checkConnection();
 
-    Directory(directory).create(recursive: true).then((Directory dir) {
+    await Directory(directory).create(recursive: true).then((Directory dir) {
       print(dir.path);
+      print("first");
     });
 
     updateDrawerList();
   }
 
-  void updateDrawerList() {
+  void updateDrawerList(){
+    print("second");
     setState(() {
       //TODO: remake for asynchronous list
       _curFiles = io.Directory(directory).listSync();
+    //  io.Directory(directory).list().listen((io.FileSystemEntity entity) {
+
+      //});
     });
   }
 
@@ -71,8 +73,9 @@ class _HomeState extends State<Home> {
   }
 
   Widget _buildRow(File file) {
+    var title = path.basenameWithoutExtension(file.path);
     return ListTile(
-        title: Text(path.basenameWithoutExtension(file.path)),
+        title: Text(title),
         onTap: () async {
           if (await checkConnection() == true) {
             var url;
@@ -84,14 +87,17 @@ class _HomeState extends State<Home> {
             controller.loadUrl(url);
             Navigator.pop(context);
             print("connected");
+            currentUrl = url;
           } else {
             String text;
             await file.readAsString().then((onValue) {
               print("here");
               text = json.decode(onValue)['text'];
             });
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => OfflineViewer(text)));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => OfflineViewer(title, text)));
             print('not connected');
           }
         },
@@ -106,11 +112,17 @@ class _HomeState extends State<Home> {
 
   Widget _buildDrawerList() {
     var list = new List<Widget>();
-    list.add(DrawerHeader(
-        child: Text("Saved"),
-        decoration: BoxDecoration(
-          color: Colors.purple,
-        )));
+    list.add(Container(
+        height: 65,
+        child: DrawerHeader(
+            child: Text(
+              "Saved",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            decoration: BoxDecoration(
+              color: Colors.purple,
+            ))));
+
     for (var elem in _curFiles) {
       list.add(_buildRow(elem));
     }
@@ -135,31 +147,31 @@ class _HomeState extends State<Home> {
         backgroundColor: Colors.purple,
       ),
       drawer: SizedBox(
-          width: size.width,
+          //width: size.width,
           child: Drawer(
-            child: _buildDrawerList(),
-          )),
+        child: _buildDrawerList(),
+      )),
       body: WebView(
-          initialUrl: 'https://mychords.net/',
-          javascriptMode: JavascriptMode.unrestricted,
-          onWebViewCreated: (WebViewController webViewController) {
-            this.controller = webViewController;
-          },
-          navigationDelegate: (NavigationRequest request) {
-            if (request.url.startsWith('https://mychords.net/')) {
-              currentUrl = request.url;
-              print("accepted url");
-              return NavigationDecision.navigate;
-            } else {
-              print("rejected url");
-              return NavigationDecision.prevent;
-            }
-          },
-          onPageStarted: (string){
-            SystemChannels.textInput.invokeMethod('TextInput.hide');
-          },
-          gestureNavigationEnabled: true,
-        ),
+        initialUrl: 'https://mychords.net/',
+        javascriptMode: JavascriptMode.unrestricted,
+        onWebViewCreated: (WebViewController webViewController) {
+          this.controller = webViewController;
+        },
+        navigationDelegate: (NavigationRequest request) {
+          if (request.url.startsWith('https://mychords.net/')) {
+            currentUrl = request.url;
+            print("accepted url");
+            return NavigationDecision.navigate;
+          } else {
+            print("rejected url");
+            return NavigationDecision.prevent;
+          }
+        },
+        onPageStarted: (string) {
+          SystemChannels.textInput.invokeMethod('TextInput.hide');
+        },
+        gestureNavigationEnabled: true,
+      ),
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.favorite),
           //// Icon(Icons.favorite,color:Colors.white),

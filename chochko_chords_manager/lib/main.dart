@@ -31,7 +31,9 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Home(),
+      home: SafeArea(
+        child:Home()
+      )
     );
      /* Scaffold(
       drawer: Drawer(child: FirstTab()),
