@@ -5,18 +5,18 @@ import 'dart:io';
 import 'dart:convert';
 
 class HTMLParser {
-  static Future<int> parseToFile(String url, String directoryLocation) async {
+  static Future<Pair> parseToFile(String url, String directoryLocation) async {
     print(url);
     if (url.endsWith(".html") == false){
       print(url);
-      return 3;
+      return Pair(null, 3);
     }
 
     var response = await http.Client().get(Uri.parse(url));
 
     if (response.statusCode != 200) {
       //TODO: throw exception?
-      return 0;
+      return Pair(null, 0);
     }
 
     var document = parse(response.body);
@@ -24,25 +24,25 @@ class HTMLParser {
     var songTextDomElement = document.getElementsByClassName("w-words__text");//[0].text;
     var title = document.getElementsByClassName("b-title");
     print(title.length);
-    var modifiedTitle = title[0].text.replaceAll(new RegExp(r"^\s+"), "");
+    var modifiedTitle = title[0].text.replaceAll(RegExp(r"^\s+"), "");
     print(modifiedTitle);
 
     var fileLocation = directoryLocation + modifiedTitle+".json";
 
-
+    var file = File(fileLocation);
     print(fileLocation);
 
     String songText;
     if (songTextDomElement.length != 0){
       songText = songTextDomElement[0].text;
 
-      if (await File(fileLocation).exists() == true){
-        return 2;
+      if (await file.exists() == true){
+        return Pair(null, 2);
       }
-      
-      File(fileLocation).create();
 
-      File(fileLocation).writeAsString(
+      file.create();
+
+      file.writeAsString(
         json.encode({
           'url': url,
           'text': "Материал взято из сайта https://mychords.net\n\n" + songText,
@@ -51,12 +51,20 @@ class HTMLParser {
       );
     }
     else{
-      return 0;
+      return Pair(null, 0);
     }
 
-    return 1;
+    return Pair(file, 1);
   }
+}
 
 
+class Pair {
+  final dynamic left;
+  final dynamic right;
 
+  Pair(this.left, this.right);
+
+  @override
+  String toString() => 'Pair[$left, $right]';
 }
