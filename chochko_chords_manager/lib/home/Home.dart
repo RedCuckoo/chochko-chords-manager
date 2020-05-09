@@ -197,16 +197,19 @@ class _HomeState extends State<Home> {
               this.controller = webViewController;
             },
             navigationDelegate: (NavigationRequest request) {
-              if (request.url.startsWith('https://mychords.net/')) {
+              /*if (request.url.startsWith('https://mychords.net/')) {
                 currentUrl = request.url;
                 print("accepted url");
                 return NavigationDecision.navigate;
               } else {
                 print("rejected url");
                 return NavigationDecision.prevent;
-              }
+              }*/
+              currentUrl = request.url;
+              return NavigationDecision.navigate;
             },
             onPageStarted: (string) {
+              checkConnection();
               SystemChannels.textInput.invokeMethod('TextInput.hide');
             },
             onPageFinished: (some) async {
