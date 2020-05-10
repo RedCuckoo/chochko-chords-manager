@@ -1,16 +1,15 @@
 import 'dart:async';
-import 'dart:io' as io;
+import 'dart:convert';
 import 'dart:io';
+import 'dart:io' as io;
 
 import 'package:chochkochordsmanager/helpers/HTML_parser.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as path;
 import 'package:webview_flutter/webview_flutter.dart';
-import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'package:path/path.dart' as path;
+
 import 'MyHeartButton.dart';
 import 'OfflineViewer.dart';
 
@@ -20,61 +19,46 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  Stream<FileSystemEntity> _curFilesStream;
-  var _curFiles = List<FileSystemEntity>();
-  var directory;
-
-  WebViewController controller;
-  String currentUrl = "mychords.net/";
-  final initialUrl = "https://mychords.net/";
-
+  final _initialUrl = "https://mychords.net/";
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  var _curFiles = List<FileSystemEntity>();
+  var _directory;
+
+  WebViewController _controller;
+  Stream<FileSystemEntity> _curFilesStream;
+  String _currentUrl;
+
   @override
   void initState() {
     super.initState();
-    initAsync();
-    print("init");
+
+    _currentUrl = _initialUrl;
+
+    _initAsync();
   }
 
-  void initAsync() async {
-    directory = (await getApplicationDocumentsDirectory()).path;
-    directory = directory + "/CCM_files/";
-
-    checkConnection();
-
-    print("initasync");
-
-    await Directory(directory).create(recursive: true).then((Directory dir) {
-      print("Created dir");
-    });
-
-    _curFilesStream = io.Directory(directory).list(recursive: false);
-
-    print("updating drawer list");
-
+  void _initAsync() async {
+    _directory = (await getApplicationDocumentsDirectory()).path + "/CCM_files/";
+    await Directory(_directory).create(recursive: true);
+    _curFilesStream = io.Directory(_directory).list(recursive: false);
     await for (FileSystemEntity entity in _curFilesStream) {
-      // setState((){
-      print("setting state");
       _curFiles.add(entity);
-      // });
     }
-
-    setState(() {});
+    _checkConnection();
   }
 
-  Future<bool> checkConnection() async {
+  Future<bool> _checkConnection() async {
     try {
       final result = await InternetAddress.lookup('www.mychords.net');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        print("true");
         return true;
       }
     } on io.SocketException catch (_) {
-      print("false");
-      _scaffoldKey.currentState.showSnackBar(SnackBar(content:Text("You are offline")));
+      _scaffoldKey.currentState
+          .showSnackBar(SnackBar(content: Text("You are offline")));
       return false;
     }
-
     return true;
   }
 
@@ -83,19 +67,23 @@ class _HomeState extends State<Home> {
     list.add(Container(
         height: 65,
         child: DrawerHeader(
-            child: Text(
-              "Saved",
+            child: Text("Saved",
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
             decoration: BoxDecoration(
               color: Colors.purple,
-            ))));
+            )
+        )
+    ));
 
-//TODO:_curFiles
-    print("creating a list");
-    for (var elem in _curFiles) {
-      list.add(_buildRow(elem));
-      list.add(Divider());
+    if (_curFiles.length == 0){
+      list.add(Text("Nothing saved yet...", textAlign: TextAlign.center,style:TextStyle(fontSize: 16,fontStyle:FontStyle.italic, color: Colors.grey)));
+    }
+    else {
+      for (var elem in _curFiles) {
+        list.add(_buildRow(elem));
+        list.add(Divider());
+      }
     }
 
     return ListView(
@@ -105,8 +93,8 @@ class _HomeState extends State<Home> {
 
   Widget _buildRow(File file) {
     var title = path.basenameWithoutExtension(file.path);
-    StreamController<bool> _streamController = StreamController<bool>();
 
+    StreamController<bool> _streamController = StreamController<bool>();
     _streamController.stream.listen((bool value) {
       if (value) {
         _curFiles.remove(file);
@@ -123,141 +111,27 @@ class _HomeState extends State<Home> {
     return ListTile(
       title: Text(title),
       onTap: () async {
-        if (await checkConnection() == true) {
+        if (await _checkConnection() == true) {
           var url;
           await file.readAsString().then((onValue) {
-            print("here");
             url = json.decode(onValue)['url'];
           });
-          print(url);
-          controller.loadUrl(url);
+          _controller.loadUrl(url);
           Navigator.pop(context);
-          print("connected");
-          currentUrl = url;
+          _currentUrl = url;
         } else {
           String text;
           await file.readAsString().then((onValue) {
-            print("here");
             text = json.decode(onValue)['text'];
           });
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => OfflineViewer(title, text)));
-          print('not connected');
         }
       },
       trailing: MyHeartButton(_streamController),
     );
-  }
-
-
-  @override
-  Widget build(BuildContext context) {
-    print("build everything");
-    Size size = MediaQuery.of(context).size;
-    double webViewHeight = 1000;
-    return WillPopScope(
-        onWillPop: _onBackButton,
-        child: Scaffold(
-          key: _scaffoldKey,
-          appBar: AppBar(
-            title: Text(
-              "Chochko CM",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 24),
-            ),
-            backgroundColor: Colors.purple,
-            actions: <Widget>[
-              IconButton(
-                icon:Icon(Icons.refresh),
-                onPressed:(){
-                  controller.reload();
-                }
-              ),
-              IconButton(
-                icon: Icon(Icons.home),
-                onPressed: () {
-                  setState(() {
-                    controller.loadUrl(initialUrl);
-                  });
-                },
-              )
-            ],
-          ),
-          drawer: SizedBox(
-              //width: size.width,
-              child: Drawer(
-            child: _buildDrawerList(),
-          )),
-          body: WebView(
-            initialUrl: 'https://mychords.net/',
-            javascriptMode: JavascriptMode.unrestricted,
-            onWebViewCreated: (WebViewController webViewController) {
-              this.controller = webViewController;
-            },
-            navigationDelegate: (NavigationRequest request) {
-              /*if (request.url.startsWith('https://mychords.net/')) {
-                currentUrl = request.url;
-                print("accepted url");
-                return NavigationDecision.navigate;
-              } else {
-                print("rejected url");
-                return NavigationDecision.prevent;
-              }*/
-              currentUrl = request.url;
-              return NavigationDecision.navigate;
-            },
-            onPageStarted: (string) {
-              checkConnection();
-              SystemChannels.textInput.invokeMethod('TextInput.hide');
-            },
-            onPageFinished: (some) async {
-              double height = double.parse(await controller.evaluateJavascript(
-                  "document.documentElement.scrollHeight;"));
-              setState(() {
-                webViewHeight = height;
-                print(webViewHeight);
-              });
-            },
-            gestureNavigationEnabled: true,
-          ),
-          floatingActionButton: FloatingActionButton(
-              child: Icon(Icons.favorite),
-              //// Icon(Icons.favorite,color:Colors.white),
-              backgroundColor: Colors.purple,
-              onPressed: () {
-                // var snackBar;
-                if (currentUrl != null) {
-                  print(directory);
-                  HTMLParser.parseToFile(currentUrl, directory).then((onValue) {
-                    String snackBarMessage;
-                    switch (onValue.right) {
-                      case (0):
-                        snackBarMessage = "Unsuccessful loading";
-                        break;
-                      case (1):
-                        snackBarMessage = "Successfully downloaded!";
-                        setState(() {
-                          _curFiles.add(onValue.left);
-                        });
-                        break;
-                      case (2):
-                        snackBarMessage = "Already saved";
-                        break;
-                      case (3):
-                        snackBarMessage = "That's not a chords page";
-                        break;
-                    }
-
-                    print(snackBarMessage);
-                    final snackBar = SnackBar(content: Text(snackBarMessage));
-                    _scaffoldKey.currentState.hideCurrentSnackBar();
-                    _scaffoldKey.currentState.showSnackBar(snackBar);
-                  });
-                }
-              }),
-        ));
   }
 
   Future<bool> _onBackButton() async {
@@ -267,13 +141,12 @@ class _HomeState extends State<Home> {
     }
 
     var goBack = false;
-    print("back button pushed");
-    print(await controller.canGoBack());
-    if (await controller.canGoBack() == true) {
-      controller.goBack();
+
+    if (await _controller.canGoBack() == true) {
+      _controller.goBack();
       return false;
-    } else {
-      print("can't go back");
+    }
+    else {
       await showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -302,9 +175,104 @@ class _HomeState extends State<Home> {
               ],
             );
           });
-      print(goBack);
       if (goBack) SystemNavigator.pop();
       return goBack;
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+        onWillPop: _onBackButton,
+        child: Scaffold(
+          key: _scaffoldKey,
+          appBar: AppBar(
+            title: Text(
+              "Chochko CM",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 24),
+            ),
+            backgroundColor: Colors.purple,
+            actions: <Widget>[
+              IconButton(
+                  icon: Icon(Icons.refresh),
+                  onPressed: () {
+                    _controller.reload();
+                  }),
+              IconButton(
+                icon: Icon(Icons.home),
+                onPressed: () {
+                  setState(() {
+                    _controller.loadUrl(_initialUrl);
+                  });
+                },
+              )
+            ],
+          ),
+          drawer: SizedBox(
+              child: Drawer(
+            child: _buildDrawerList(),
+          )),
+          body: WebView(
+            initialUrl: _initialUrl,
+            javascriptMode: JavascriptMode.unrestricted,
+            onWebViewCreated: (WebViewController webViewController) {
+              this._controller = webViewController;
+            },
+            /*navigationDelegate: (NavigationRequest request) {
+              /*if (request.url.startsWith('https://mychords.net/')) {
+                currentUrl = request.url;
+                print("accepted url");
+                return NavigationDecision.navigate;
+              } else {
+                print("rejected url");
+                return NavigationDecision.prevent;
+              }*/
+              currentUrl = request.url;
+              return NavigationDecision.navigate;
+            },*/
+            onPageStarted: (string) {
+              _checkConnection();
+              _currentUrl = string;
+              SystemChannels.textInput.invokeMethod('TextInput.hide');
+            },
+            gestureNavigationEnabled: true,
+          ),
+          floatingActionButton: FloatingActionButton(
+              child: Icon(Icons.favorite),
+              //// Icon(Icons.favorite,color:Colors.white),
+              backgroundColor: Colors.purple,
+              onPressed: () {
+                if (_currentUrl != null) {
+                  print(_directory);
+                  HTMLParser.parseToFile(_currentUrl, _directory)
+                      .then((onValue) {
+                    String snackBarMessage;
+
+                    switch (onValue.right) {
+                      case (0):
+                        snackBarMessage = "Unsuccessful loading";
+                        break;
+                      case (1):
+                        snackBarMessage = "Successfully downloaded!";
+                        setState(() {
+                          _curFiles.add(onValue.left);
+                        });
+                        break;
+                      case (2):
+                        snackBarMessage = "Already saved";
+                        break;
+                      case (3):
+                        snackBarMessage = "That's not a chords page";
+                        break;
+                    }
+
+                    final snackBar = SnackBar(content: Text(snackBarMessage));
+                    _scaffoldKey.currentState.hideCurrentSnackBar();
+                    _scaffoldKey.currentState.showSnackBar(snackBar);
+                  });
+                }
+              }),
+        ));
   }
 }

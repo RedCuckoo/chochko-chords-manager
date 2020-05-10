@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:chochkochordsmanager/home/Home.dart';
 
@@ -13,50 +11,8 @@ class MyHome extends StatefulWidget {
 }
 
 class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
-  TabController controller;
-
-  var home = MaterialPageRoute(builder: (context) => MaterialApp(home:SafeArea(child:Home())));
-
-  @override
-  void initState() {
-    super.initState();
-    controller = TabController(vsync: this, length: 2, initialIndex: 1);
-
-    loadData();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  Future<Timer> loadData() async {
-    return new Timer(Duration(milliseconds: 1000), onDoneLoading);
-  }
-
-  onDoneLoading() async {
-    Navigator.of(context).pushReplacement(home);
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Container(child:Center(child:CircularProgressIndicator()));
-    //return MaterialApp(home: SafeArea(child: Home()));
-    /* Scaffold(
-      drawer: Drawer(child: FirstTab()),
-      appBar: AppBar(
-        title: Text("Chochko Chords Manager", textAlign: TextAlign.center,),
-        backgroundColor: Colors.purple,
-        leading: Builder(builder: (BuildContext context) {
-          return IconButton(
-            icon: const Icon(Icons.favorite),
-            onPressed: (){
-              Scaffold.of(context).openDrawer();
-            },
-          );
-        }),
-      ),
-    );*/
+    return MaterialApp(home:SafeArea(child:Home()));
   }
 }

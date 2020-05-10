@@ -24,7 +24,6 @@ class _MyHeartButtonState extends State<MyHeartButton>{
         setState((){
           filled = false;
         });
-        print("deleting");
         showDialog(
             context: context,
             builder:(BuildContext context){
