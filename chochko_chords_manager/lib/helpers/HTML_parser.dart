@@ -35,7 +35,7 @@ class HTMLParser {
       file.writeAsString(
         json.encode({
           'url': url,
-          'text': "Материал взято из сайта https://mychords.net\n\n" + songText,
+          'text': "Material is taken from the website https://mychords.net\n\n" + songText,
         }
         )
       );

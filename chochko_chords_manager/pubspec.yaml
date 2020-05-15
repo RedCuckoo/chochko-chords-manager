@@ -1,5 +1,5 @@
 name: chochkochordsmanager
-description: Chords manager for an Android
+description: Chords manager that allows saving lyrics with chords from the exact website with the ability to load it while offline
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
