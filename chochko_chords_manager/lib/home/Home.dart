@@ -45,6 +45,10 @@ class _HomeState extends State<Home> {
     await for (FileSystemEntity entity in _curFilesStream) {
       _curFiles.add(entity);
     }
+
+    //setState for updating drawer List after reopening app
+    setState(() {});
+
     _checkConnection();
   }
 
